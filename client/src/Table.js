@@ -24,29 +24,26 @@ class Table extends React.Component {
           });
       }
     
-      onCatChange = (event) => {
-        this.setState({ searchCat: event.target.value })
-      }
 
       onPlayerChange = (event) => {
         this.setState({ searchfield: event.target.value })
       }
     
-      onSubmitCat = () => {
+      onCats = (cat) => {
         console.log('yeet')
         fetch('http://localhost:9000/searchCat', {
             method: 'post',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                searchCat: this.state.searchCat
+                searchCat: cat
             })
         })
             .then(response => response.json())
             .then(res => {
-                console.log(res.msg);
                 this.setState({ players: res });
             });
     }
+
 
     render(){
         const searchPlayers = this.state.players.filter(player => {
@@ -73,19 +70,19 @@ class Table extends React.Component {
                     Dropdown button
                 </button>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href='www.google.com'>Position</a>
-                    <a class="dropdown-item" >Games</a>
-                    <a class="dropdown-item" >Field Goal Percentage</a>
-                    <a class="dropdown-item" >3 Pointers Made</a>
-                    <a class="dropdown-item" >3 Point Percentage</a>
-                    <a class="dropdown-item" >2 Point Percentage</a>
-                    <a class="dropdown-item" >Free Throw Percentage</a>
-                    <a class="dropdown-item" >Assists</a>
-                    <a class="dropdown-item" >Steals</a>
-                    <a class="dropdown-item" >Blocks</a>
-                    <a class="dropdown-item" >Points</a>
-                    <a class="dropdown-item" >Rebounds</a>
-                    <a class="dropdown-item" >None</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("pos")}>Position</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("games")}>Games</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("field%")}>Field Goal Percentage</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("3p")}>3 Pointers Per Game</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("3p%")}>3 Point Percentage</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("2p%")}>2 Point Percentage</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("ft%")}>Free Throw Percentage</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("ast")}>Assists</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("stl")}>Steals</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("blk")}>Blocks</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("pts")}>Points</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("reb")}>Rebounds</a>
+                    <a class="dropdown-item" onClick={() => this.onCats("none")}>None</a>
                 </div>
             </div>
 
