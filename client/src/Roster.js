@@ -1,63 +1,22 @@
 import React from 'react';
-import { Container, Row, Col, Button, ButtonToolbar, ButtonGroup } from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
-class Table extends React.Component {
+class Roster extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      players: [],
-      sortcat: [],
-      filtercat: false,
-      searchfield: '',
-      addPlayer: ''
+      searchfield: ''
     }
   }
-
-  componentDidMount() {
-    fetch("http://localhost:9000/", {
-      method: 'get',
-      headers: { 'Content-Type': 'application/json' }
-    })
-      .then(response => response.json())
-      .then(res => {
-        console.log(res);
-        this.setState({ players: res });
-      });
-  }
-
 
   onPlayerChange = (event) => {
     this.setState({ searchfield: event.target.value })
   }
 
-  // onAdd = (event) => {
-  //   this.setState({addPlayer: true})
-  // }
-
-  // onDrop = (event) => {
-  //   this.setState({addPlayer: true})
-  // }
-
-  onCats = (cat) => {
-    console.log('yeet')
-    fetch('http://localhost:9000/searchCat', {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        searchCat: cat
-      })
-    })
-      .then(response => response.json())
-      .then(res => {
-        this.setState({ players: res });
-      });
-  }
-
-
   render() {
-    const searchPlayers = this.state.players.filter(player => {
-      return player.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
-    })
+    // const searchPlayers = this.props.roster.filter(player => {
+    //   return player.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
+    // })
     return (
       <div>
         <Container fluid="true">
@@ -114,13 +73,13 @@ class Table extends React.Component {
               <th scope="col">Blk</th>
               <th scope="col">Pts</th>
               <th scope="col">Reb</th>
-              <th scope="col">Add Player</th>
+              <th scope="col">Add or Drop</th>
             </tr>
           </thead>
           <tbody>
             {
 
-              searchPlayers.map(idx => {
+              this.props.roster.map(idx => {
                 return (
                   <tr>
                     <th scope="row">{idx['name']}</th>
@@ -136,9 +95,7 @@ class Table extends React.Component {
                     <td>{idx['blk']}</td>
                     <td>{idx['pts']}</td>
                     <td>{idx['reb']}</td>
-                    <td>
-                      <Button onClick={() => this.props.addPlayer(idx['name'], this.props.roster)}>+</Button>
-                    </td>
+                    <td><Button onClick={() => this.props.dropPlayer(idx['name'], this.props.roster)}>-</Button></td>
                   </tr>
                 )
               })
@@ -153,4 +110,4 @@ class Table extends React.Component {
   }
 }
 
-export default Table;
+export default Roster;
