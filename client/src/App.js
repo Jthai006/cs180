@@ -16,9 +16,9 @@ class App extends React.Component {
   }
 
 
-// componentDidMount(){
-  
-// }
+componentDidMount(){
+  this.setState({roster: []});
+}
   // sendMsg = () => {
   //   fetch("http://localhost:9000/client", {
   //     method: 'get',
@@ -30,29 +30,28 @@ class App extends React.Component {
   //       this.setState({ players: res });
   //     });
   // }
-  addPlayer = (name, roster) => {
+  addPlayer = (name) => {
     console.log(name)
     fetch('http://localhost:9000/addPlayer', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        addPlayer: name,
-        roster: roster
+        addPlayer: name
       })
     })
       .then(response => response.json())
       .then(res => {
+        console.log(res)
         this.setState({ roster: res });
       });
   }
 
-  dropPlayer = (name, roster) => {
+  dropPlayer = (name) => {
     fetch('http://localhost:9000/dropPlayer', {
       method: 'post',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        addPlayer: name,
-        roster: roster
+        addPlayer: name
       })
     })
       .then(response => response.json())
@@ -69,12 +68,12 @@ class App extends React.Component {
                 <Route path="/"  render={props =>
                 <div>
                 <HomeNav />
-                <Table addPlayer={this.addPlayer} roster={this.state.roster}/>
+                <Table addPlayer={this.addPlayer}/>
                 </div> }exact />
                 <Route path="/team" render={props =>
                 <div>
                 <HomeNav />
-                <Roster roster={this.state.roster} dropPlayer={this.dropPlayer}/>
+                <Roster dropPlayer={this.dropPlayer} roster={this.state.roster}/>
                 </div> } />
                 
                 <Route component={Error} />

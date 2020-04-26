@@ -137,7 +137,7 @@ class Table extends React.Component {
                     <td>{idx['pts']}</td>
                     <td>{idx['reb']}</td>
                     <td>
-                      <Button onClick={() => this.props.addPlayer(idx['name'], this.props.roster)}>+</Button>
+                      <Button onClick={() => this.props.addPlayer(idx['name'])}>+</Button>
                     </td>
                   </tr>
                 )

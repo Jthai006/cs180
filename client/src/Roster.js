@@ -9,9 +9,9 @@ class Roster extends React.Component {
     }
   }
 
-  onPlayerChange = (event) => {
-    this.setState({ searchfield: event.target.value })
-  }
+  // onPlayerChange = (event) => {
+  //   this.setState({ searchfield: event.target.value })
+  // }
 
   render() {
     // const searchPlayers = this.props.roster.filter(player => {
@@ -22,41 +22,7 @@ class Roster extends React.Component {
         <Container fluid="true">
           <Row>
             <Col className="bg-white" lg={{ span: 8, offset: 2 }} md={{ span: 10, offset: 1 }} sm={{ span: 12, offset: 0 }}>
-        <div className='pa2'>
-          <input
-            className='pa3 ba b--green bg-lightest-blue'
-            type='search'
-            placeholder='search player'
-            onChange={this.onPlayerChange}
-          />
-          <input
-            onClick={this.onSubmitCat}
-            className="b ph3 pv2 input-reset bg-black ba b--gray grow pointer f6 dib white"
-            type="submit"
-            value="Search" />
-        </div>
-
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown button
-                </button>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" onClick={() => this.onCats("pos")}>Position</a>
-            <a class="dropdown-item" onClick={() => this.onCats("games")}>Games</a>
-            <a class="dropdown-item" onClick={() => this.onCats("field%")}>Field Goal Percentage</a>
-            <a class="dropdown-item" onClick={() => this.onCats("3p")}>3 Pointers Per Game</a>
-            <a class="dropdown-item" onClick={() => this.onCats("3p%")}>3 Point Percentage</a>
-            <a class="dropdown-item" onClick={() => this.onCats("2p%")}>2 Point Percentage</a>
-            <a class="dropdown-item" onClick={() => this.onCats("ft%")}>Free Throw Percentage</a>
-            <a class="dropdown-item" onClick={() => this.onCats("ast")}>Assists</a>
-            <a class="dropdown-item" onClick={() => this.onCats("stl")}>Steals</a>
-            <a class="dropdown-item" onClick={() => this.onCats("blk")}>Blocks</a>
-            <a class="dropdown-item" onClick={() => this.onCats("pts")}>Points</a>
-            <a class="dropdown-item" onClick={() => this.onCats("reb")}>Rebounds</a>
-            <a class="dropdown-item" onClick={() => this.onCats("none")}>None</a>
-          </div>
-        </div>
-        
+        <h1>My Team</h1>
         <table class="table">
           <thead>
             <tr>
@@ -95,7 +61,7 @@ class Roster extends React.Component {
                     <td>{idx['blk']}</td>
                     <td>{idx['pts']}</td>
                     <td>{idx['reb']}</td>
-                    <td><Button onClick={() => this.props.dropPlayer(idx['name'], this.props.roster)}>-</Button></td>
+                    <td><Button onClick={() => this.props.dropPlayer(idx['name'])}>-</Button></td>
                   </tr>
                 )
               })
