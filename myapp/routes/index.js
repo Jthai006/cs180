@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const csv = require('csv');
 var rosterArr = [];
+var playerArr = [];
 const obj = csv();
 
 obj.from.path('/Users/johnthai/Desktop/front+back/cs180/myapp/routes/PlayerStatisticsPerGame.csv').to.array(function (data) {
@@ -33,11 +34,26 @@ router.get('/', function (req, res, next) {
     var mp = yearRoster[index][6];
     var playerObject = { 'name': yearRoster[index][0], 'pos': yearRoster[index][1], 'games': yearRoster[index][4], 'field%': fieldPercentint.toFixed(3), '3p': yearRoster[index][10], '3p%': threePercentint.toFixed(3), '2p%': twoPercentint.toFixed(3), 'ft%': ftPercentint.toFixed(3), 'asst': yearRoster[index][22], 'stl': yearRoster[index][23], 'blk': yearRoster[index][24], 'pts': yearRoster[index][28], 'reb': yearRoster[index][21] }
 
-    MyData.push(playerObject);
+    playerArr.push(playerObject);
 
+    var points = 0;
+    var rebounds = 0;
+    var assits = 0;
+    var steals = 0;
+    var turnover = 0;
+    points = Math.max.apply(Math, playerArr.map(function (o) { return o["pts"]; }))
+    console.log(points);
+    rebounds = Math.max.apply(Math, playerArr.map(function (o) { return o["reb"]; }))
+    assits = Math.max.apply(Math, playerArr.map(function (o) { return o["asst"]; }))
+    steals = Math.max.apply(Math, playerArr.map(function (o) { return o["stl"]; }))
+    // turnover = Math.max.apply(Math, playerArr.map(function (o) { return o["pts"]; }))
 
+    for (var index = 0; index < playerArr.length; index++) {
+      playerArr[index]["fantasyScore"] = Math.round(((playerArr[index]["pts"] / points) + (playerArr[index]["reb"] / rebounds) * 1.25 + (playerArr[index]["asst"] / assits) * 1.5 + (playerArr[index]["stl"] / steals) * 3) * 100) / 100
+    }
   }
-  shortarray = MyData.slice(0, 200);
+  // playerArr = MyData;
+  shortarray = playerArr.slice(0, 200);
   res.send(shortarray);
 
 });
@@ -52,32 +68,26 @@ router.post('/searchcat', function (req, res, next) {
   var MyData = [];
   var shortarray = [];
 
-  for (var index = 0; index < yearRoster.length; index++) {
-    var fieldPercent = yearRoster[index][9];
-    var fieldPercentint = +fieldPercent;
-    var threePercent = yearRoster[index][12];
-    var threePercentint = +threePercent;
-    var twoPercent = yearRoster[index][15];
-    var twoPercentint = +twoPercent;
-    var ftPercent = yearRoster[index][19];
-    var ftPercentint = +ftPercent;
-    var mp = yearRoster[index][6];
-    var playerObject = { 'name': yearRoster[index][0], 'pos': yearRoster[index][1], 'games': yearRoster[index][4], 'field%': fieldPercentint.toFixed(3), '3p': yearRoster[index][10], '3p%': threePercentint.toFixed(3), '2p%': twoPercentint.toFixed(3), 'ft%': ftPercentint.toFixed(3), 'asst': yearRoster[index][22], 'stl': yearRoster[index][23], 'blk': yearRoster[index][24], 'pts': yearRoster[index][28], 'reb': yearRoster[index][21] }
+  // for (var index = 0; index < yearRoster.length; index++) {
+  //   var fieldPercent = yearRoster[index][9];
+  //   var fieldPercentint = +fieldPercent;
+  //   var threePercent = yearRoster[index][12];
+  //   var threePercentint = +threePercent;
+  //   var twoPercent = yearRoster[index][15];
+  //   var twoPercentint = +twoPercent;
+  //   var ftPercent = yearRoster[index][19];
+  //   var ftPercentint = +ftPercent;
+  //   var mp = yearRoster[index][6];
+  //   var playerObject = { 'name': yearRoster[index][0], 'pos': yearRoster[index][1], 'games': yearRoster[index][4], 'field%': fieldPercentint.toFixed(3), '3p': yearRoster[index][10], '3p%': threePercentint.toFixed(3), '2p%': twoPercentint.toFixed(3), 'ft%': ftPercentint.toFixed(3), 'asst': yearRoster[index][22], 'stl': yearRoster[index][23], 'blk': yearRoster[index][24], 'pts': yearRoster[index][28], 'reb': yearRoster[index][21], 'fantasyScore': playerArr[index]["fantasyScore"] }
 
-    MyData.push(playerObject);
+  //   MyData.push(playerObject);
 
 
-  }
-  function sortByKey(array, key) {
-    return array.sort(function (a, b) {
-      var x = a[key]; var y = b[key];
-      return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-    });
-  }
-  MyData.sort(function (a, b) {
+  // }
+  playerArr.sort(function (a, b) {
     return b[req.body.searchCat] - a[req.body.searchCat]
   })
-  res.send(MyData);
+  res.send(playerArr);
 
 });
 router.post('/getRoster', function (req, res, next) {
@@ -122,6 +132,26 @@ router.post('/dropPlayer', function (req, res, next) {
   })
   res.send(rosterArr);
 
+
+});
+
+router.post('/scoring', function (req, res, next) {
+  var points = 0;
+  var rebounds = 0;
+  var assits = 0;
+  var steals = 0;
+  var turnover = 0;
+  points = Math.max.apply(Math, playerArr.map(function (o) { return o["pts"]; }))
+  console.log(points);
+  rebounds = Math.max.apply(Math, playerArr.map(function (o) { return o["reb"]; }))
+  assits = Math.max.apply(Math, playerArr.map(function (o) { return o["asst"]; }))
+  steals = Math.max.apply(Math, playerArr.map(function (o) { return o["stl"]; }))
+  // turnover = Math.max.apply(Math, playerArr.map(function (o) { return o["pts"]; }))
+
+  for (var index = 0; index < playerArr.length; index++) {
+    playerArr[index]["fantasyScore"] = Math.round(((playerArr[index]["pts"] / points) + (playerArr[index]["reb"] / rebounds) * 1.25 + (playerArr[index]["asst"] / assits) * 1.5 + (playerArr[index]["stl"] / steals) * 3) * 100) / 100
+  }
+  res.send(playerArr);
 
 });
 

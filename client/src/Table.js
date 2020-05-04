@@ -94,6 +94,7 @@ class Table extends React.Component {
                   <a class="dropdown-item" onClick={() => this.onCats("blk")}>Blocks</a>
                   <a class="dropdown-item" onClick={() => this.onCats("pts")}>Points</a>
                   <a class="dropdown-item" onClick={() => this.onCats("reb")}>Rebounds</a>
+                  <a class="dropdown-item" onClick={() => this.onCats("fantasyScore")}>Fantasy Score</a>
                   <a class="dropdown-item" onClick={() => this.onCats("none")}>None</a>
                 </div>
               </div>
@@ -114,6 +115,7 @@ class Table extends React.Component {
                     <th scope="col">Blk</th>
                     <th scope="col">Pts</th>
                     <th scope="col">Reb</th>
+                    <th scope="col">Fantasy</th>
                     <th scope="col">Add Player</th>
                   </tr>
                 </thead>
@@ -136,6 +138,7 @@ class Table extends React.Component {
                           <td>{idx['blk']}</td>
                           <td>{idx['pts']}</td>
                           <td>{idx['reb']}</td>
+                          <td>{idx['fantasyScore']}</td>
                           <td>
                             <Button onClick={() => this.props.addPlayer(idx['name'])}>+</Button>
                           </td>
