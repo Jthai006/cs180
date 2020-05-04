@@ -78,23 +78,25 @@ class Table extends React.Component {
               </div>
 
               <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Dropdown button
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Sort By Category
                 </button>
                 <div class="dropdown-menu">
-                  <a class="dropdown-item" onClick={() => this.onCats("pos")}>Position</a>
+                  {/* <a class="dropdown-item" onClick={() => this.onCats("pos")}>Position</a> */}
                   <a class="dropdown-item" onClick={() => this.onCats("games")}>Games</a>
                   <a class="dropdown-item" onClick={() => this.onCats("field%")}>Field Goal Percentage</a>
                   <a class="dropdown-item" onClick={() => this.onCats("3p")}>3 Pointers Per Game</a>
                   <a class="dropdown-item" onClick={() => this.onCats("3p%")}>3 Point Percentage</a>
                   <a class="dropdown-item" onClick={() => this.onCats("2p%")}>2 Point Percentage</a>
                   <a class="dropdown-item" onClick={() => this.onCats("ft%")}>Free Throw Percentage</a>
-                  <a class="dropdown-item" onClick={() => this.onCats("ast")}>Assists</a>
+                  <a class="dropdown-item" onClick={() => this.onCats("asst")}>Assists</a>
                   <a class="dropdown-item" onClick={() => this.onCats("stl")}>Steals</a>
                   <a class="dropdown-item" onClick={() => this.onCats("blk")}>Blocks</a>
                   <a class="dropdown-item" onClick={() => this.onCats("pts")}>Points</a>
                   <a class="dropdown-item" onClick={() => this.onCats("reb")}>Rebounds</a>
-                  <a class="dropdown-item" onClick={() => this.onCats("fantasyScore")}>Fantasy Score</a>
+                  <a class="dropdown-item" onClick={() => this.onCats("prtg")}>Player Rating</a>
+                  <a class="dropdown-item" onClick={() => this.onCats("fantasyScore")}>Avg Fantasy Score</a>
+                  <a class="dropdown-item" onClick={() => this.onCats("fantasytotal")}>Total Fantasy Pts</a>
                   <a class="dropdown-item" onClick={() => this.onCats("none")}>None</a>
                 </div>
               </div>
@@ -115,7 +117,9 @@ class Table extends React.Component {
                     <th scope="col">Blk</th>
                     <th scope="col">Pts</th>
                     <th scope="col">Reb</th>
-                    <th scope="col">Fantasy</th>
+                    <th scope="col">Player Rtg</th>
+                    <th scope="col">Fantasy Avg</th>
+                    <th scope="col">Total Fantasy Pts</th>
                     <th scope="col">Add Player</th>
                   </tr>
                 </thead>
@@ -138,7 +142,9 @@ class Table extends React.Component {
                           <td>{idx['blk']}</td>
                           <td>{idx['pts']}</td>
                           <td>{idx['reb']}</td>
+                          <td>{idx['prtg']}</td>
                           <td>{idx['fantasyScore']}</td>
+                          <td>{idx['fantasytotal']}</td>
                           <td>
                             <Button onClick={() => this.props.addPlayer(idx['name'])}>+</Button>
                           </td>

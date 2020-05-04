@@ -53,7 +53,10 @@ class Roster extends React.Component {
                     <th scope="col">Blk</th>
                     <th scope="col">Pts</th>
                     <th scope="col">Reb</th>
-                    <th scope="col">Add or Drop</th>
+                    <th scope="col">Player Rtg</th>
+                    <th scope="col">Fantasy Avg</th>
+                    <th scope="col">Tot Fantasy Pts</th>
+                    <th scope="col">Drop Player</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -75,6 +78,9 @@ class Roster extends React.Component {
                           <td>{idx['blk']}</td>
                           <td>{idx['pts']}</td>
                           <td>{idx['reb']}</td>
+                          <td>{idx['prtg']}</td>
+                          <td>{idx['fantasyScore']}</td>
+                          <td>{idx['fantasytotal']}</td>
                           <td><Button onClick={() => this.props.dropPlayer(idx['name'])}>-</Button></td>
                         </tr>
                       )
