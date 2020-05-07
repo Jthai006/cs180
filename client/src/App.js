@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Table from './Table';
 import HomeNav from './HomeNav';
 import Roster from './Roster';
+import Compare from './Compare';
 import { Route, Switch } from 'react-router-dom';
 class App extends React.Component {
   constructor(props) {
@@ -74,6 +75,11 @@ componentDidMount(){
                 <div>
                 <HomeNav />
                 <Roster dropPlayer={this.dropPlayer} roster={this.state.roster}/>
+                </div> } />
+                <Route path="/compare" render={props =>
+                <div>
+                <HomeNav />
+                <Compare/>
                 </div> } />
                 
                 <Route component={Error} />

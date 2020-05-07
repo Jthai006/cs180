@@ -5,7 +5,7 @@ var rosterArr = [];
 var playerArr = [];
 const obj = csv();
 
-obj.from.path('/Users/Johnny Ho/Desktop/cs180/myapp/routes/PlayerStatisticsPerGame.csv').to.array(function (data) {
+obj.from.path('/Users/Johnny/Desktop/School Projects/cs180/myapp/routes/PlayerStatisticsPerGame.csv').to.array(function (data) {
 
   yearRoster = data.filter(data => {
     return data[29] == 2018
@@ -181,6 +181,19 @@ router.post('/scoring', function (req, res, next) {
   }
   res.send(playerArr);
 
+});
+
+router.post('/comparePlayers', function (req, res, next) {
+  var player1 = req.body.player1
+  var player2 = req.body.player2
+
+  yearRoster.map(idx => {
+    if (idx[0].toLowerCase() == player1.toLowerCase()) {
+      console.log('hi');
+    }
+  })
+
+  res.send(player1);
 });
 
 module.exports = router;

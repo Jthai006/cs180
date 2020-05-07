@@ -9,7 +9,8 @@ const HomeNav = () => {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
                 <Nav className="ml-auto">
-                <Link to="/team">My Team</Link>
+                <Link className= "mr-5" to="/team">My Team</Link>
+                <Link to="/compare">Compare Players</Link>
                 </Nav>
             </Navbar.Collapse>
         </Navbar>
