@@ -186,14 +186,25 @@ router.post('/scoring', function (req, res, next) {
 router.post('/comparePlayers', function (req, res, next) {
   var player1 = req.body.player1
   var player2 = req.body.player2
+  var bigArray = [];
+  var player1Arr = [];
+  var player2Arr = [];
+
 
   yearRoster.map(idx => {
     if (idx[0].toLowerCase() == player1.toLowerCase()) {
-      console.log('hi');
+      player1Arr.push(idx[28],idx[21],idx[23],idx[10],idx[24],idx[25]);
+    }
+  })
+  yearRoster.map(idx => {
+    if (idx[0].toLowerCase() == player2.toLowerCase()) {
+      player2Arr.push(idx[28],idx[21],idx[23],idx[10],idx[24],idx[25]);
     }
   })
 
-  res.send(player1);
+  bigArray.push(player1Arr,player2Arr);
+  console.log(bigArray);
+  res.send(bigArray);
 });
 
 module.exports = router;
