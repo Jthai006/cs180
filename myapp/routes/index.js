@@ -5,7 +5,7 @@ var rosterArr = [];
 var playerArr = [];
 const obj = csv();
 
-obj.from.path('/Users/Johnny/Desktop/School Projects/cs180/myapp/routes/PlayerStatisticsPerGame.csv').to.array(function (data) {
+obj.from.path('/Users/johnthai/Desktop/front+back/cs180/myapp/routes/PlayerStatisticsPerGame.csv').to.array(function (data) {
 
   yearRoster = data.filter(data => {
     return data[29] == 2018
@@ -14,6 +14,39 @@ obj.from.path('/Users/Johnny/Desktop/School Projects/cs180/myapp/routes/PlayerSt
 
 
 
+router.get('/save', function (req, res, next) {
+
+  // var data = { roster: rosterArr };
+  // var json = JSON.parse(data);
+  // console.log(json);
+  // var data = JSON.stringify(json);
+  // var fs = require('fs');
+  // fs.writeFile("file.json", data);
+  const fs = require('fs')
+  const saved = {
+    roster: rosterArr
+  }
+  const jsonString = JSON.stringify(saved)
+  fs.writeFile('./data.json', jsonString, err => {
+    if (err) {
+      console.log('Error writing file', err)
+    } else {
+      console.log('Successfully wrote file')
+    }
+  })
+  res.send("done");
+
+});
+router.get('/import', function (req, res, next) {
+
+  const fs = require('fs');
+
+  let rawdata = fs.readFileSync('data.json');
+  let data = JSON.parse(rawdata);
+  rosterArr = data["roster"]
+  res.send(rosterArr);
+
+});
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -32,7 +65,7 @@ router.get('/', function (req, res, next) {
     var ftPercent = yearRoster[index][19];
     var ftPercentint = +ftPercent;
     var mp = yearRoster[index][6];
-    var fantasypts = (+(yearRoster[index][28]) + (+(yearRoster[index][10])*3) + (+(yearRoster[index][22])*1.2)  + (+(yearRoster[index][23])*1.5) + (+(yearRoster[index][25])*2) + (+(yearRoster[index][24])*2));
+    var fantasypts = (+(yearRoster[index][28]) + (+(yearRoster[index][10]) * 3) + (+(yearRoster[index][22]) * 1.2) + (+(yearRoster[index][23]) * 1.5) + (+(yearRoster[index][25]) * 2) + (+(yearRoster[index][24]) * 2));
     //console.log(+(yearRoster[index][28]) + (+(yearRoster[index][21])*1.25))
     var fantasytotal = +(fantasypts) * (+(yearRoster[index][4]));
     var playerObject = { 'name': yearRoster[index][0], 'pos': yearRoster[index][1], 'games': yearRoster[index][4], 'field%': fieldPercentint.toFixed(3), '3p': yearRoster[index][10], '3p%': threePercentint.toFixed(3), '2p%': twoPercentint.toFixed(3), 'ft%': ftPercentint.toFixed(3), 'asst': yearRoster[index][23], 'stl': yearRoster[index][24], 'blk': yearRoster[index][25], 'pts': yearRoster[index][28], 'reb': yearRoster[index][22], 'fantasyScore': fantasypts.toFixed(2), 'fantasytotal': fantasytotal.toFixed(0) }
@@ -118,7 +151,7 @@ router.post('/addPlayer', function (req, res, next) {
       var ftPercentint = +ftPercent;
       var mp = index[0][6];
       var year = index[0][29];
-      var fantasypts = (+([index][0][28]) + (+([index][0][10])*3) + (+([index][0][22])*1.2)  + (+([index][0][23])*1.5) + (+([index][0][25])*2) + (+([index][0][24])*2));
+      var fantasypts = (+([index][0][28]) + (+([index][0][10]) * 3) + (+([index][0][22]) * 1.2) + (+([index][0][23]) * 1.5) + (+([index][0][25]) * 2) + (+([index][0][24]) * 2));
       //console.log('a');
       var fantasytotal = +(fantasypts) * (+([index][0][4]));
       //console.log('b');
@@ -193,16 +226,16 @@ router.post('/comparePlayers', function (req, res, next) {
 
   yearRoster.map(idx => {
     if (idx[0].toLowerCase() == player1.toLowerCase()) {
-      player1Arr.push(idx[28],idx[21],idx[23],idx[10],idx[24],idx[25]);
+      player1Arr.push(idx[28], idx[21], idx[23], idx[10], idx[24], idx[25]);
     }
   })
   yearRoster.map(idx => {
     if (idx[0].toLowerCase() == player2.toLowerCase()) {
-      player2Arr.push(idx[28],idx[21],idx[23],idx[10],idx[24],idx[25]);
+      player2Arr.push(idx[28], idx[21], idx[23], idx[10], idx[24], idx[25]);
     }
   })
 
-  bigArray.push(player1Arr,player2Arr);
+  bigArray.push(player1Arr, player2Arr);
   console.log(bigArray);
   res.send(bigArray);
 });
