@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import ApexCharts from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
 
 
@@ -14,11 +13,11 @@ class Compare extends React.Component {
       series: [{
         name: 'Player1',
         type: 'column',
-        data: [1, 1, 1, 1, 1, 1]
+        data: []
       }, {
         name: 'Player2',
         type: 'column',
-        data: [1, 1, 1, 1, 1, 1]
+        data: []
       }],
       options: {
         chart: {
@@ -93,43 +92,45 @@ class Compare extends React.Component {
     };
   }
 
-
-        onPlayer1Change = (event) => {
-          this.setState({ player1: event.target.value })
-      }
-      onPlayer2Change = (event) => {
-          this.setState({ player2: event.target.value })
-      }
-
-      // getBarData(res) {
-      //   console.log(res);
-      //   this.setState({
-      //       // series: [{
-      //       //     data: res
-      //       // }]
-      //       player1: 'nig'
-      //   });
-      // }
-
   onSubmitPlayers = () => {
-      fetch('http://localhost:9000/comparePlayers', {
-          method: 'post',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-              player1: this.state.player1,
-              player2: this.state.player2
-          })
-      })
-          .then(response => response.json())
-          .then(res => {
-              // this.getBarData(res);
-              this.setState({player1: 'nig'})
-      })
+    fetch('http://localhost:9000/comparePlayers', {
+        method: 'post',
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({
+            player1: this.state.player1,
+            player2: this.state.player2
+        })
+    })
+        .then(response => response.json())
+        .then(res => {
+            console.log(res);
+            this.getBarData(res);
+    })
 
 }
-  
 
-    
+  onPlayer1Change = (event) => {
+      this.setState({ player1: event.target.value })
+  }
+  onPlayer2Change = (event) => {
+      this.setState({ player2: event.target.value })
+  }
+
+  getBarData = (res) => {
+    console.log(res);  
+    this.setState({
+        series: [{
+            name: res[0][0],
+            type: 'column',
+            data: res[1]
+        }, {
+          name: res[0][1],
+          type: 'column',
+          data: res[2]
+        }]
+    });
+  }
+
 
   render() {
     
@@ -149,7 +150,7 @@ class Compare extends React.Component {
                         <Form.Label>Player 2</Form.Label>
                         <Form.Control onChange={this.onPlayer2Change} type="player" placeholder="Enter player name" />
                     </Form.Group>
-                    <Button onClick={this.onSubmitPlayers} variant="primary" type="submit"> 
+                    <Button onClick={this.onSubmitPlayers} variant="primary"> 
                         Compare!
                     </Button>
                 </Form>
