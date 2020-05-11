@@ -217,25 +217,29 @@ router.post('/scoring', function (req, res, next) {
 });
 
 router.post('/comparePlayers', function (req, res, next) {
-  var player1 = req.body.player1
-  var player2 = req.body.player2
-  var bigArray = [];
+  var player1 = req.body.player1;
+  var player2 = req.body.player2;
   var player1Arr = [];
   var player2Arr = [];
+  var playerArr = [];
+  var bigArray = [];
 
-
-  yearRoster.map(idx => {
-    if (idx[0].toLowerCase() == player1.toLowerCase()) {
-      player1Arr.push(idx[28], idx[21], idx[23], idx[10], idx[24], idx[25]);
+  // console.log(yearRoster);
+  for(var i=0; i<yearRoster.length; i++){
+    if(yearRoster[i][0].trim().toLowerCase() == player1.toLowerCase()){
+      player1Arr.push(yearRoster[i][28],yearRoster[i][21],yearRoster[i][23],yearRoster[i][10],yearRoster[i][24],yearRoster[i][25])
     }
-  })
-  yearRoster.map(idx => {
-    if (idx[0].toLowerCase() == player2.toLowerCase()) {
-      player2Arr.push(idx[28], idx[21], idx[23], idx[10], idx[24], idx[25]);
-    }
-  })
+  }
 
-  bigArray.push(player1Arr, player2Arr);
+  for(var i=0; i<yearRoster.length; i++){
+    if(yearRoster[i][0].trim().toLowerCase() == player2.toLowerCase()){
+      player2Arr.push(yearRoster[i][28],yearRoster[i][21],yearRoster[i][23],yearRoster[i][10],yearRoster[i][24],yearRoster[i][25])
+    }
+  }
+
+  playerArr.push(player1, player2)
+
+  bigArray.push(playerArr, player1Arr, player2Arr)
   console.log(bigArray);
   res.send(bigArray);
 });
