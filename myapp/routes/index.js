@@ -3,17 +3,26 @@ var router = express.Router();
 const csv = require('csv');
 var rosterArr = [];
 var playerArr = [];
+var statsArr = [];
 const obj = csv();
+var playerIndex = 0;
+var bigRoster = {};
+var searchArr = []
 
-obj.from.path('/Users/Johnny/Desktop/School Projects/cs180/myapp/routes/PlayerStatisticsPerGame.csv').to.array(function (data) {
+obj.from.path('/Users/johnthai/Desktop/front+back/untitled folder/cs180/myapp/routes/PlayerStatisticsPerGame.csv').to.array(function (data) {
 
   yearRoster = data.filter(data => {
-    return data[29] == 2018
+    return data[29] == 2020
   })
-  
-  bigRoster = data.filter(data => {
-    return data[29] >= 2003
-  })
+
+  for (var x = 2018; x < 2021; x++) {
+    var temp = [];
+    temp = data.filter(data => {
+      return data[29] == x
+
+    })
+    bigRoster[x] = temp;
+  }
 });
 
 
@@ -58,8 +67,7 @@ router.get('/', function (req, res, next) {
   var MyData = [];
 
   var shortarray = [];
-
-  for (var index = 0; index < yearRoster.length; index++) {
+  for (var index = 0; index < 49; index++) {
     var fieldPercent = yearRoster[index][9];
     var fieldPercentint = +fieldPercent;
     var threePercent = yearRoster[index][12];
@@ -100,35 +108,52 @@ router.get('/', function (req, res, next) {
   myStars.sort(function (a, b) {
     return b["fantasytotal"] - a["fantasytotal"]
   })
-  
+
   var allStars = myStars.slice(0, 24);
   for (var index = 0; index < playerArr.length; index++) {
-    
-    if(allStars.includes(myStars[index])){
-     
+
+    if (allStars.includes(myStars[index])) {
+
       playerArr[index]["star"] = "****"
     }
-    else{
-      
+    else {
+
       playerArr[index]["star"] = ""
     }
-    
-}
 
-  
+  }
+
+
   // playerArr = MyData;
-  shortarray = playerArr.slice(0, 200);
-  res.send(shortarray);
+  //shortarray = playerArr.slice(0, 200);
+  res.send(playerArr);
+  playerArr = [];
 
 });
 
-router.get('/stats', function (req, res, next) {
+router.post('/changePg', function (req, res, next) {
+  playerArr = [];
   const obj = csv();
   var MyData = [];
 
   var shortarray = [];
+  if (req.body.type == "next") {
+    playerIndex += 50;
+    upto = playerIndex + 50;
+    console.log(playerIndex);
+  }
+  else {
+    if (playerIndex == 0) {
+      upto = 50;
+    }
+    else {
+      playerIndex = playerIndex - 50
+      upto = playerIndex + 50;
+    }
 
-  for (var index = 0; index < yearRoster.length; index++) {
+  }
+  for (var index = playerIndex; index < upto; index++) {
+    console.log(index);
     var fieldPercent = yearRoster[index][9];
     var fieldPercentint = +fieldPercent;
     var threePercent = yearRoster[index][12];
@@ -159,21 +184,130 @@ router.get('/stats', function (req, res, next) {
     threesmade = Math.max.apply(Math, playerArr.map(function (o) { return o["3p"]; }))
     blks = Math.max.apply(Math, playerArr.map(function (o) { return o["blk"]; }))
 
-    for (var index = 0; index < playerArr.length; index++) {
-      playerArr[index]["prtg"] = Math.round(((playerArr[index]["pts"] / points) + (playerArr[index]["reb"] / rebounds) * 1.2 + (playerArr[index]["asst"] / assists) * 1.5 + (playerArr[index]["stl"] / steals) * 2) + ((playerArr[index]["blk"] / blks) * 2) * 100) / 100
+    for (var y = 0; y < playerArr.length; y++) {
+      playerArr[y]["prtg"] = Math.round(((playerArr[y]["pts"] / points) + (playerArr[y]["reb"] / rebounds) * 1.2 + (playerArr[y]["asst"] / assists) * 1.5 + (playerArr[y]["stl"] / steals) * 2) + ((playerArr[y]["blk"] / blks) * 2) * 100) / 100
+    }
+  }
+
+  var myStars = []
+  myStars = playerArr;
+  myStars.sort(function (a, b) {
+    return b["fantasytotal"] - a["fantasytotal"]
+  })
+
+  var allStars = myStars.slice(0, 24);
+  for (var index = 0; index < playerArr.length; index++) {
+
+    if (allStars.includes(myStars[index])) {
+
+      playerArr[index]["star"] = "****"
+    }
+    else {
+
+      playerArr[index]["star"] = ""
+    }
+
+  }
+
+
+  // playerArr = MyData;
+  //shortarray = playerArr.slice(0, 200);
+  res.send(playerArr);
+
+});
+
+router.get('/stats', function (req, res, next) {
+  const obj = csv();
+  var MyData = [];
+  var namesOfPlayer = [];
+  var shortarray = [];
+
+  for (var index = 0; index < yearRoster.length; index++) {
+    namesOfPlayer.push(yearRoster[index][0]);
+    var fieldPercent = yearRoster[index][9];
+    var fieldPercentint = +fieldPercent;
+    var threePercent = yearRoster[index][12];
+    var threePercentint = +threePercent;
+    var twoPercent = yearRoster[index][15];
+    var twoPercentint = +twoPercent;
+    var ftPercent = yearRoster[index][19];
+    var ftPercentint = +ftPercent;
+    var mp = yearRoster[index][6];
+    var fantasypts = (+(yearRoster[index][28]) + (+(yearRoster[index][10]) * 3) + (+(yearRoster[index][22]) * 1.2) + (+(yearRoster[index][23]) * 1.5) + (+(yearRoster[index][25]) * 2) + (+(yearRoster[index][24]) * 2));
+    //console.log(+(yearRoster[index][28]) + (+(yearRoster[index][21])*1.25))
+    var fantasytotal = +(fantasypts) * (+(yearRoster[index][4]));
+    var playerObject = { 'name': yearRoster[index][0], 'pos': yearRoster[index][1], 'games': yearRoster[index][4], 'field%': fieldPercentint.toFixed(3), '3p': yearRoster[index][10], '3p%': threePercentint.toFixed(3), '2p%': twoPercentint.toFixed(3), 'ft%': ftPercentint.toFixed(3), 'asst': yearRoster[index][23], 'stl': yearRoster[index][24], 'blk': yearRoster[index][25], 'pts': yearRoster[index][28], 'reb': yearRoster[index][22], 'fantasyScore': fantasypts.toFixed(2), 'fantasytotal': fantasytotal.toFixed(0) }
+
+    statsArr.push(playerObject);
+
+    var points = 0;
+    var rebounds = 0;
+    var assists = 0;
+    var steals = 0;
+    var threesmade = 0;
+    var blks = 0;
+    points = Math.max.apply(Math, statsArr.map(function (o) { return o["pts"]; }))
+    // console.log(points);
+    rebounds = Math.max.apply(Math, statsArr.map(function (o) { return o["reb"]; }))
+    assists = Math.max.apply(Math, statsArr.map(function (o) { return o["asst"]; }))
+    steals = Math.max.apply(Math, statsArr.map(function (o) { return o["stl"]; }))
+    threesmade = Math.max.apply(Math, statsArr.map(function (o) { return o["3p"]; }))
+    blks = Math.max.apply(Math, statsArr.map(function (o) { return o["blk"]; }))
+
+    for (var index = 0; index < statsArr.length; index++) {
+      statsArr[index]["prtg"] = Math.round(((statsArr[index]["pts"] / points) + (statsArr[index]["reb"] / rebounds) * 1.2 + (statsArr[index]["asst"] / assists) * 1.5 + (statsArr[index]["stl"] / steals) * 2) + ((statsArr[index]["blk"] / blks) * 2) * 100) / 100
     }
 
 
 
   }
+  var players = {};
+  for (var x = 0; x < namesOfPlayer.length; x++) {
+    players[namesOfPlayer[x]] = [];
+  }
 
+  Object.keys(bigRoster).forEach(function (key) {
+    for (var x = 0; x < bigRoster[key].length; x++) {
+      if (namesOfPlayer.includes(bigRoster[key][x][0])) {
+        players[bigRoster[key][x][0]].push(bigRoster[key][x]);
 
-  // for (var idx = 0; idx < playerArr.length; idx++) {
+      }
+    }
+  });
+
+  var finalFantasypoints = {};
+  var finalFantasypointslow = {};
+  // console.log(players);
+  Object.keys(players).forEach(function (key) {
+    var temp = 0
+    var temp2 = 9999
+    for (var x = 0; x < players[key].length; x++) {
+      var fantasypts = (+(players[key][x][28]) + (+(players[key][x][10]) * 3) + (+(players[key][x][22]) * 1.2) + (+(players[key][x][23]) * 1.5) + (+(players[key][x][25]) * 2) + (+(players[key][x][24]) * 2));
+      var fantasytotal = (fantasypts) * ((players[key][x][4]));
+      if (temp < fantasytotal) {
+        temp = Math.ceil((100 * fantasytotal) / 100)
+        finalFantasypoints[key] = (100 * temp) / 100;
+      }
+    }
+    if (temp > fantasytotal) {
+      temp = Math.ceil((100 * fantasytotal) / 100)
+      finalFantasypointslow[key] = (100 * temp) / 100;
+    }
+  }
+  );
+  console.log(finalFantasypointslow);
+
+  for (var index = 0; index < statsArr.length; index++) {
+    statsArr[index]["high"] = finalFantasypoints[statsArr[index]["name"]]
+    statsArr[index]["low"] = finalFantasypointslow[statsArr[index]["name"]]
+  }
+
+  // for (var idx = 0; idx < statsArr.length; idx++) {
   //   var myPlayers = bigRoster.filter(player => {
   //     // console.log(playerArr[index]);
   //     return player[0] == playerArr[idx]["name"]
-      
-    
+
+
   //   //   var fantasypts = (+(yearRoster[index][28]) + (+(yearRoster[index][10]) * 3) + (+(yearRoster[index][22]) * 1.2) + (+(yearRoster[index][23]) * 1.5) + (+(yearRoster[index][25]) * 2) + (+(yearRoster[index][24]) * 2));
   //   // //console.log(+(yearRoster[index][28]) + (+(yearRoster[index][21])*1.25))
   //   // var fantasytotal = +(fantasypts) * (+(yearRoster[index][4]));
@@ -191,7 +325,8 @@ router.get('/stats', function (req, res, next) {
 
   // playerArr = MyData;
   shortarray = playerArr.slice(0, 200);
-  res.send(shortarray);
+  console.log(statsArr);
+  res.send(statsArr);
 
 });
 
@@ -203,28 +338,30 @@ router.get('/client', function (req, res, next) {
 router.post('/searchcat', function (req, res, next) {
   const obj = csv();
   var MyData = [];
+
   var shortarray = [];
+  for (var index = 0; index < yearRoster.length; index++) {
+    var fieldPercent = yearRoster[index][9];
+    var fieldPercentint = +fieldPercent;
+    var threePercent = yearRoster[index][12];
+    var threePercentint = +threePercent;
+    var twoPercent = yearRoster[index][15];
+    var twoPercentint = +twoPercent;
+    var ftPercent = yearRoster[index][19];
+    var ftPercentint = +ftPercent;
+    var mp = yearRoster[index][6];
+    var fantasypts = (+(yearRoster[index][28]) + (+(yearRoster[index][10]) * 3) + (+(yearRoster[index][22]) * 1.2) + (+(yearRoster[index][23]) * 1.5) + (+(yearRoster[index][25]) * 2) + (+(yearRoster[index][24]) * 2));
+    //console.log(+(yearRoster[index][28]) + (+(yearRoster[index][21])*1.25))
+    var fantasytotal = +(fantasypts) * (+(yearRoster[index][4]));
+    var playerObject = { 'name': yearRoster[index][0], 'pos': yearRoster[index][1], 'games': yearRoster[index][4], 'field%': fieldPercentint.toFixed(3), '3p': yearRoster[index][10], '3p%': threePercentint.toFixed(3), '2p%': twoPercentint.toFixed(3), 'ft%': ftPercentint.toFixed(3), 'asst': yearRoster[index][23], 'stl': yearRoster[index][24], 'blk': yearRoster[index][25], 'pts': yearRoster[index][28], 'reb': yearRoster[index][22], 'fantasyScore': fantasypts.toFixed(2), 'fantasytotal': fantasytotal.toFixed(0) }
 
-  // for (var index = 0; index < yearRoster.length; index++) {
-  //   var fieldPercent = yearRoster[index][9];
-  //   var fieldPercentint = +fieldPercent;
-  //   var threePercent = yearRoster[index][12];
-  //   var threePercentint = +threePercent;
-  //   var twoPercent = yearRoster[index][15];
-  //   var twoPercentint = +twoPercent;
-  //   var ftPercent = yearRoster[index][19];
-  //   var ftPercentint = +ftPercent;
-  //   var mp = yearRoster[index][6];
-  //   var playerObject = { 'name': yearRoster[index][0], 'pos': yearRoster[index][1], 'games': yearRoster[index][4], 'field%': fieldPercentint.toFixed(3), '3p': yearRoster[index][10], '3p%': threePercentint.toFixed(3), '2p%': twoPercentint.toFixed(3), 'ft%': ftPercentint.toFixed(3), 'asst': yearRoster[index][22], 'stl': yearRoster[index][23], 'blk': yearRoster[index][24], 'pts': yearRoster[index][28], 'reb': yearRoster[index][21], 'fantasyScore': playerArr[index]["fantasyScore"] }
-
-  //   MyData.push(playerObject);
-
-
-  // }
-  playerArr.sort(function (a, b) {
+    searchArr.push(playerObject);
+  }
+  searchArr.sort(function (a, b) {
     return b[req.body.searchCat] - a[req.body.searchCat]
   })
-  res.send(playerArr);
+  shortarray = searchArr.slice(0, 50);
+  res.send(shortarray);
 
 });
 router.post('/getRoster', function (req, res, next) {
@@ -324,15 +461,15 @@ router.post('/comparePlayers', function (req, res, next) {
   var bigArray = [];
 
   // console.log(yearRoster);
-  for(var i=0; i<yearRoster.length; i++){
-    if(yearRoster[i][0].trim().toLowerCase() == player1.toLowerCase()){
-      player1Arr.push(yearRoster[i][28],yearRoster[i][21],yearRoster[i][23],yearRoster[i][10],yearRoster[i][24],yearRoster[i][25])
+  for (var i = 0; i < yearRoster.length; i++) {
+    if (yearRoster[i][0].trim().toLowerCase() == player1.toLowerCase()) {
+      player1Arr.push(yearRoster[i][28], yearRoster[i][21], yearRoster[i][23], yearRoster[i][10], yearRoster[i][24], yearRoster[i][25])
     }
   }
 
-  for(var i=0; i<yearRoster.length; i++){
-    if(yearRoster[i][0].trim().toLowerCase() == player2.toLowerCase()){
-      player2Arr.push(yearRoster[i][28],yearRoster[i][21],yearRoster[i][23],yearRoster[i][10],yearRoster[i][24],yearRoster[i][25])
+  for (var i = 0; i < yearRoster.length; i++) {
+    if (yearRoster[i][0].trim().toLowerCase() == player2.toLowerCase()) {
+      player2Arr.push(yearRoster[i][28], yearRoster[i][21], yearRoster[i][23], yearRoster[i][10], yearRoster[i][24], yearRoster[i][25])
     }
   }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Row, Col, Button} from 'react-bootstrap';
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 class Table extends React.Component {
   constructor(props) {
@@ -107,8 +107,8 @@ class Table extends React.Component {
                           <td>{idx['prtg']}</td>
                           <td>{idx['fantasyScore']}</td>
                           <td>{idx['fantasytotal']}</td>
-                          <td>{idx['carHigh']}</td>
-                          <td>{idx['carLow']}</td>
+                          <td>{idx['high']}</td>
+                          <td>{idx['low']}</td>
                         </tr>
                       )
                     })

@@ -53,6 +53,20 @@ class Table extends React.Component {
       });
   }
 
+  changePg = (type) => {
+    fetch('http://localhost:9000/changePg', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: type
+      })
+    })
+      .then(response => response.json())
+      .then(res => {
+        this.setState({ players: res });
+      });
+  }
+
 
   render() {
     const searchPlayers = this.state.players.filter(player => {
@@ -156,6 +170,16 @@ class Table extends React.Component {
                   }
                 </tbody>
               </table>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item disabled">
+                    <Button class="page-link " onClick={() => this.changePg("prev")}>previous</Button>
+                  </li>
+                  <li class="page-item">
+                    <Button class="page-link" onClick={() => this.changePg("next")}>next</Button>
+                  </li>
+                </ul>
+              </nav>
             </Col>
           </Row>
         </Container>
