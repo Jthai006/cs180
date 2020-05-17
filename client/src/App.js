@@ -5,6 +5,7 @@ import Table from './Table';
 import HomeNav from './HomeNav';
 import Roster from './Roster';
 import Compare from './Compare';
+import Stats from './Stats';
 import { Route, Switch } from 'react-router-dom';
 class App extends React.Component {
   constructor(props) {
@@ -80,6 +81,11 @@ componentDidMount(){
                 <div>
                 <HomeNav />
                 <Compare/>
+                </div> } />
+                <Route path="/stats" render={props =>
+                <div>
+                <HomeNav />
+                <Stats></Stats>
                 </div> } />
                 
                 <Route component={Error} />

@@ -24,6 +24,7 @@ class HomeNav extends React.Component {
                     <Nav className="ml-auto">
                         <Link className="mr-5" to="/team">My Team</Link>
                         <Link className="mr-5" to="/compare">Compare Players</Link>
+                        <Link className="mr-5" to="/stats">Advanced Statistics</Link>
                         <Button onClick={() => this.imports()} className="mr-5">import</Button>
                         <Button onClick={() => this.exports()} >export</Button>
                     </Nav>
