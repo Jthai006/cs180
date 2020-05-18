@@ -32,7 +32,7 @@ class Compare extends React.Component {
           width: [1, 1, 4]
         },
         title: {
-          text: 'Player 1 vs. Player 2',
+          text: 'Player 1 vs. Player 2 (Averages from Last Three Years)',
           align: 'left',
           offsetX: 110
         },

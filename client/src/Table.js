@@ -8,7 +8,7 @@ class Table extends React.Component {
       players: [],
       sortcat: [],
       filtercat: false,
-      searchfield: '',
+      searchPlayer: '',
       addPlayer: ''
     }
   }
@@ -27,9 +27,29 @@ class Table extends React.Component {
 
 
   onPlayerChange = (event) => {
-    this.setState({ searchfield: event.target.value })
+    this.setState({ searchPlayer: event.target.value })
   }
 
+  onSearch = () => {
+    fetch('http://localhost:9000/searchPlayer', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        searchPlayer: this.state.searchPlayer
+      })
+    })
+      .then(response => response.json())
+      .then(res => {
+        console.log(res);
+        if(res.length == 1){
+          this.setState({ players: res });
+        }
+        else if(res){
+          alert("This player does not exist");
+        }
+        
+      });
+  }
   // onAdd = (event) => {
   //   this.setState({addPlayer: true})
   // }
@@ -69,9 +89,9 @@ class Table extends React.Component {
 
 
   render() {
-    const searchPlayers = this.state.players.filter(player => {
-      return player.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
-    })
+    // const searchPlayers = this.state.players.filter(player => {
+    //   return player.name.toLowerCase().includes(this.state.searchfield.toLowerCase());
+    // })
     return (
       <div>
         <Container fluid="true">
@@ -85,10 +105,10 @@ class Table extends React.Component {
                   onChange={this.onPlayerChange}
                 />
                 <input
-                  onClick={this.onSubmitCat}
-                  className="b ph3 pv2 input-reset bg-black ba b--gray grow pointer f6 dib white"
-                  type="submit"
-                  value="Search" />
+                  onClick={() => this.onSearch()}
+                  className="b ph3 pv2 input-reset bg-black ba b--gray grow pointer dib white"
+                  type='submit'
+                  value="Submit" />
               </div>
 
               <div class="dropdown">
@@ -108,9 +128,6 @@ class Table extends React.Component {
                   <a class="dropdown-item" onClick={() => this.onCats("blk")}>Blocks</a>
                   <a class="dropdown-item" onClick={() => this.onCats("pts")}>Points</a>
                   <a class="dropdown-item" onClick={() => this.onCats("reb")}>Rebounds</a>
-                  <a class="dropdown-item" onClick={() => this.onCats("prtg")}>Player Rating</a>
-                  <a class="dropdown-item" onClick={() => this.onCats("fantasyScore")}>Avg Fantasy Score</a>
-                  <a class="dropdown-item" onClick={() => this.onCats("fantasytotal")}>Total Fantasy Pts</a>
                   <a class="dropdown-item" onClick={() => this.onCats("none")}>None</a>
                 </div>
               </div>
@@ -131,17 +148,13 @@ class Table extends React.Component {
                     <th scope="col">Blk</th>
                     <th scope="col">Pts</th>
                     <th scope="col">Reb</th>
-                    <th scope="col">Player Rtg</th>
-                    <th scope="col">Fantasy Avg</th>
-                    <th scope="col">Total Fantasy Pts</th>
-                    <th scope="col">Predicted All-Star</th>
                     <th scope="col">Add Player</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
 
-                    searchPlayers.map(idx => {
+                    this.state.players.map(idx => {
                       return (
                         <tr>
                           <th scope="row">{idx['name']}</th>
@@ -157,10 +170,6 @@ class Table extends React.Component {
                           <td>{idx['blk']}</td>
                           <td>{idx['pts']}</td>
                           <td>{idx['reb']}</td>
-                          <td>{idx['prtg']}</td>
-                          <td>{idx['fantasyScore']}</td>
-                          <td>{idx['fantasytotal']}</td>
-                          <td>{idx['star']}</td>
                           <td>
                             <Button onClick={() => this.props.addPlayer(idx['name'])}>+</Button>
                           </td>
