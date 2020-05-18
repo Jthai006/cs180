@@ -357,10 +357,19 @@ router.post('/searchcat', function (req, res, next) {
 
     searchArr.push(playerObject);
   }
-  searchArr.sort(function (a, b) {
+  var obj1 = searchArr.reduce(function (acc, cur, i) {
+    acc[cur["name"]] = cur;
+    return acc;
+  }, {});
+  var finalArr = []
+  Object.keys(obj1).forEach(function (key) {
+    finalArr.push(obj1[key])
+  }
+  );
+  finalArr.sort(function (a, b) {
     return b[req.body.searchCat] - a[req.body.searchCat]
   })
-  shortarray = searchArr.slice(0, 50);
+  shortarray = finalArr.slice(0, 50);
   res.send(shortarray);
 
 });
